@@ -1,5 +1,6 @@
 package com.detrening.detrening.Maps;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -8,6 +9,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -19,6 +21,7 @@ class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     private String googlePlacesData;
     private GoogleMap mMap;
     String url;
+    private Marker mMarker;
 
     @Override
     protected String doInBackground(Object... objects) {
@@ -45,22 +48,35 @@ class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     private void showNearbyPlaces(List<HashMap<String,String>> nearbyPlaceList){
         for (int i = 0; i <nearbyPlaceList.size(); i++){
-            MarkerOptions markerOptions = new MarkerOptions();
+
             HashMap<String, String> googlePlace = nearbyPlaceList.get(i);
 
             String placeName = googlePlace.get("place_name");
             String vicinity = googlePlace.get("vicinity");
+            String rating = googlePlace.get("rating");
+//            String openclose = googlePlace.get("open_close");
             double lat = Double.parseDouble(googlePlace.get("lat"));
             double lng = Double.parseDouble(googlePlace.get("lng"));
+            String id = googlePlace.get("place_id");
+
+
+            String snippet = "Alamat : "+vicinity+"\n Rating : " +rating+"\n Latitude : "+lat+"\n Longitude : "+lng+"\n Place id : "+id;
 
             LatLng latLng = new LatLng(lat, lng);
-            markerOptions.position(latLng);
-            markerOptions.title(placeName + " : "+ vicinity);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(placeName)
+                    .snippet(snippet);
+//            markerOptions.title(placeName + " : "+ vicinity + " : "+ rating);
+
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+
 
             mMap.addMarker(markerOptions);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+//            mMap.setInfoWindowAdapter(new infoAdapter(null));
 
         }
     }

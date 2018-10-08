@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,9 +26,14 @@ import com.detrening.detrening.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,6 +54,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener{
 
+    private static final String TAG = "Maps";
 
     private GoogleMap mMap;
 
@@ -62,6 +69,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
     private PlaceAutoComplete placeAutoComplete;
     AutoCompleteTextView autoCompleteTextView;
     EditText tf_location;
+    private PlaceInfo mPlace;
 
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40, -168), new LatLng(71, 136));
 
@@ -78,9 +86,26 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
         mapFragment.getMapAsync(Maps.this);
 
         tf_location = (EditText) findViewById(R.id.searchEdit);
+       /* autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.searchEdit);
 
 
   //      init();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).enableAutoManage(this,this).build();
+        placeAutoComplete = new PlaceAutoComplete(this, mGoogleApiClient, LAT_LNG_BOUNDS, null);
+        autoCompleteTextView.setAdapter(placeAutoComplete);
+        autoCompleteTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || event.getAction() == KeyEvent.ACTION_DOWN
+                        || event.getAction() == KeyEvent.KEYCODE_ENTER){
+
+                }
+                return false;
+            }
+        });*/
 
 
     }
@@ -145,7 +170,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(13));
 
-        currentLocationMarker.remove();
 
 
         if(mGoogleApiClient != null)
@@ -166,7 +190,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
                 List<Address> addressList;
 
                 mMap.clear();
-
 
                 if (!location.equals("")) {
                     Geocoder geocoder = new Geocoder(this);
@@ -204,6 +227,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
 
 
                 getNearbyPlacesData.execute(dataTransfer);
+                mMap.setInfoWindowAdapter(new infoAdapter(Maps.this));
                 Toast.makeText(Maps.this, "Showing Nearby Fitness", Toast.LENGTH_LONG).show();
                 break;
 //            case R.id.searchEdit:
@@ -285,6 +309,59 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
         finish();
     }
 
+    /*private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            final AutocompletePrediction item = PlaceAutoComplete.getItem(i);
+            final String placeId = item.getPlaceId();
+
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+        }
+    };
+
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(@NonNull PlaceBuffer places) {
+            if(!places.getStatus().isSuccess()){
+                Log.d(TAG, "onResult: Place query did not complete successfully: " + places.getStatus().toString());
+                places.release();
+                return;
+            }
+            final Place place = places.get(0);
+
+            try{
+                mPlace = new PlaceInfo();
+                mPlace.setName(place.getName().toString());
+                Log.d(TAG, "onResult: name: " + place.getName());
+                mPlace.setAddress(place.getAddress().toString());
+                Log.d(TAG, "onResult: address: " + place.getAddress());
+//                mPlace.setAttributions(place.getAttributions().toString());
+//                Log.d(TAG, "onResult: attributions: " + place.getAttributions());
+                mPlace.setId(place.getId());
+                Log.d(TAG, "onResult: id:" + place.getId());
+                mPlace.setLatlng(place.getLatLng());
+                Log.d(TAG, "onResult: latlng: " + place.getLatLng());
+                mPlace.setRating(place.getRating());
+                Log.d(TAG, "onResult: rating: " + place.getRating());
+                mPlace.setPhoneNumber(place.getPhoneNumber().toString());
+                Log.d(TAG, "onResult: phone number: " + place.getPhoneNumber());
+                mPlace.setWebsiteUri(place.getWebsiteUri());
+                Log.d(TAG, "onResult: website uri: " + place.getWebsiteUri());
+
+                Log.d(TAG, "onResult: place: " + mPlace.toString());
+            }catch (NullPointerException e){
+                Log.e(TAG, "onResult: NullPointerException: " + e.getMessage() );
+            }
+
+            moveCamera(new LatLng(place.getViewport().getCenter().latitude,
+                    place.getViewport().getCenter().longitude), 15f, mPlace.getName());
+
+            places.release();
+        }
+    };*/
+
    /* private void geoLocate() {
         String searchString = textView.getText().toString();
 
@@ -301,7 +378,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), 15f,
                     address.getAddressLine(0));
         }
-    }
+    } */
 
     private void moveCamera(LatLng latLng, float zoom, String title){
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -314,7 +391,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
         }
 
     }
-
+/*
     private void init(){
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -346,4 +423,5 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
         });
 
     }*/
+
 }
