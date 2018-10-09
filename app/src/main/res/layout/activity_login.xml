@@ -100,14 +100,32 @@
             android:backgroundTint="@color/cyan"
             android:textStyle="bold"
             android:onClick="fungsiLogin"/>
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/btnFB"
+            android:layout_below="@id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btnGoogle"
+            android:layout_below="@id/btnFB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Login with Google"
+            android:layout_marginTop="16dp"
+
+            />
 
         <RelativeLayout
+
             android:id="@+id/ttt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/btnLogin"
+            android:layout_below="@id/btnGoogle"
             android:layout_marginTop="15dp"
-
             android:layout_centerHorizontal="true"
             android:background="@color/trans"
             >

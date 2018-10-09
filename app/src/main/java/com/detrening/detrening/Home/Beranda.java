@@ -30,7 +30,15 @@ import com.detrening.detrening.Profil.ProfilInfo;
 import com.detrening.detrening.R;
 import com.detrening.detrening.Tips.TipsTrik;
 import com.detrening.detrening.Workout.WorkOut;
+import com.facebook.login.LoginManager;
 import com.firebase.client.Firebase;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,6 +60,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 public class Beranda extends AppCompatActivity {
     private FirebaseAuth nAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
+    private GoogleSignInClient mGoogleSignInClient;
     FirebaseDatabase firebaseInstance;
     DatabaseReference firebaseDatabase;
     private FusedLocationProviderClient client;
@@ -63,7 +72,7 @@ public class Beranda extends AppCompatActivity {
     public static String emailUser, infoUser;
     FirebaseUser firebaseUser;
     Firebase mRef;
-
+    public GoogleApiClient googleApiClient;
     Button btnTips, btnChat, btnProg;
     private TextView mDate, mTemp, mCity, mWeather;
 
@@ -87,6 +96,20 @@ public class Beranda extends AppCompatActivity {
         mDate = (TextView) findViewById(R.id.tanggalWet);
         mWeather = (TextView) findViewById(R.id.weather_desc);
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        googleApiClient = new GoogleApiClient.Builder(Beranda.this)
+                .enableAutoManage(Beranda.this , new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                    }
+                } /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
         nAuth = FirebaseAuth.getInstance();
         firebaseUser = nAuth.getCurrentUser();
@@ -150,6 +173,18 @@ public class Beranda extends AppCompatActivity {
 
     public void fungsiLogout(){
         nAuth.signOut();
+
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+
+                        Toast.makeText(Beranda.this, "Logout Successfully", Toast.LENGTH_LONG).show();
+                        finish();
+                        startActivity(new Intent(Beranda.this, Login.class));
+                    }
+                });
+        LoginManager.getInstance().logOut();
 
     }
 
