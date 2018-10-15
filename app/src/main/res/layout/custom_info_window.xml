@@ -12,18 +12,14 @@
         android:orientation="vertical">
 
 
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/title"
-            android:layout_gravity="center_horizontal"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#000"
+            android:maxLines="10"
             android:textSize="14sp"
-            android:textStyle="bold"/>
-
+            android:textColor="#000"
+            android:id="@+id/snippet"/>
 
 
         <TextView
@@ -33,7 +29,10 @@
             android:maxLines="10"
             android:textSize="14sp"
             android:textColor="#000"
-            android:id="@+id/snippet"/>
+            android:id="@+id/idPlace"/>
+
+
     </LinearLayout>
+
 
 </LinearLayout>

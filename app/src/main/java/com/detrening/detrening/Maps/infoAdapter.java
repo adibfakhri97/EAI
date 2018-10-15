@@ -1,6 +1,7 @@
 package com.detrening.detrening.Maps;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -22,17 +23,24 @@ public class infoAdapter implements GoogleMap.InfoWindowAdapter {
     private void rendowWindowText(Marker marker, View view){
 
         String title = marker.getTitle();
-        TextView tvTitle = (TextView) view.findViewById(R.id.title);
-
-        if(!title.equals("")){
-            tvTitle.setText(title);
-        }
 
         String snippet = marker.getSnippet();
-        TextView tvSnippet = (TextView) view.findViewById(R.id.snippet);
+        TextView sn = (TextView) view.findViewById(R.id.snippet);
+        TextView id = (TextView) view.findViewById(R.id.idPlace);
+        if (!title.equals("")){
+            id.setText(title);
+        }
+        if (!snippet.equals("")){
+            sn.setText(snippet);
+        }
 
-        if(!snippet.equals("")){
-            tvSnippet.setText(snippet);
+
+        if (!title.equals("")&& !snippet.equals("")){
+            Intent intent = new Intent(mContext, details_tempat.class);
+            intent.putExtra("id_pl", title);
+            intent.putExtra("snippet", snippet);
+            mContext.startActivity(intent);
+
         }
     }
 
