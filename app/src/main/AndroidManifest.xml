@@ -117,7 +117,9 @@
             android:name=".Maps.Maps"
             android:parentActivityName=".Home.Beranda"
             android:screenOrientation="portrait" />
-        <activity android:name=".Maps.details_tempat"></activity>
+        <activity android:name=".Maps.details_tempat"
+            android:parentActivityName=".Maps.Maps"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

@@ -20,7 +20,8 @@ import org.json.JSONObject;
 
 public class details_tempat extends AppCompatActivity {
 
-    private TextView noTelp, snippetDet, jadwalTemp, websiteTemp;
+    private TextView noTelp, snippetDet, jadwalTemp, websiteTemp, bukatutup;
+    private String TAG = "OPENING HOUR: ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class details_tempat extends AppCompatActivity {
         snippetDet = (TextView) findViewById(R.id.snippetDet);
         jadwalTemp = (TextView) findViewById(R.id.jadwal_tempat);
         websiteTemp = (TextView) findViewById(R.id.websiteTemp);
-
+//        bukatutup = (TextView) findViewById(R.id.buka_tutup);
 
 
         placeDetail();
@@ -44,8 +45,9 @@ public class details_tempat extends AppCompatActivity {
         String snippet = bundle.getString("snippet");
         snippetDet.setText(snippet);
         Log.d("details_tempat",snippet);
-        String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid="+id+"&fields=name,rating,opening_hours,website,formatted_phone_number,website,reviews&key=AIzaSyCGk57FWCs2BLCzMtCVFSvmZiYrFgDROc4";
+        String url = "https://maps.googleapis.com/maps/api/place/details/json?place_id="+id+"&fields=name,rating,opening_hours,website,formatted_phone_number,website,reviews&key=AIzaSyCGk57FWCs2BLCzMtCVFSvmZiYrFgDROc4";
 
+        Log.d("LIMIT", url);
         JsonObjectRequest json = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -53,23 +55,39 @@ public class details_tempat extends AppCompatActivity {
                     JSONObject main_object = response.getJSONObject("result");
                     JSONObject opening_hours = main_object.getJSONObject("opening_hours");
                     JSONArray array_jadwal = opening_hours.getJSONArray("weekday_text");
+
+
                     String[] jadArr = new String[array_jadwal.length()];
 
 
-                    for (int i = 0; i < array_jadwal.length(); i++){
+
+
+
+                    for (int i = 0; i <= 6; i++){
                         jadArr[i] = array_jadwal.getString(i);
-                        jadwalTemp.setText(jadArr[i]);
+                        Log.d(TAG, jadArr[i]);
+                        jadwalTemp.setText("Jadwal Tempat : \n"+jadArr[0]+"\n"+jadArr[1]+"\n"+jadArr[2]+"\n"+jadArr[3]+"\n"+jadArr[4]+"\n"+jadArr[5]+"\n"+jadArr[6]);
                     }
 
 
 
                     String phone = main_object.getString("formatted_phone_number");
-                    String web = main_object.getString("website");
+
+
 
                     noTelp.setText("No Telp. : "+phone);
-                    websiteTemp.setText(web);
+                    Log.d("no_Telp", phone);
 
+                    String web = main_object.getString("website");
+                    websiteTemp.setText("Website : "+web);
+                    Log.d("web", web);
 
+//                    String open_status = opening_hours.getString("open_now");
+//                    if (open_status.equals("true")){
+//                        bukatutup.setText("Tempat sedang buka");
+//                    }else {
+//                        bukatutup.setText("Tempat sudah tutup");
+//                    }
 
 
 
