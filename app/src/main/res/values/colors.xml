@@ -13,5 +13,10 @@
     <color name="navy">#00094b</color>
     <color name="trans">#99e4e1e1</color>
     <color name="trans100">#99ffffff</color>
+    <color name="False">#B82A2A</color>
+    <color name="TRUE">#229954</color>
+    #229954
+
+
 
 </resources>

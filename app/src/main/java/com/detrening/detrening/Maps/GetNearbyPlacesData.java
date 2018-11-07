@@ -60,7 +60,7 @@ class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             String id = googlePlace.get("place_id");
 
 
-            String snippet = "Nama : "+placeName+"\n Alamat : "+vicinity+"\n Rating : " +rating+"\n Latitude : "+lat+"\n Longitude : "+lng+"\n Place id : "+id;
+            String snippet = "Nama : "+placeName+"\n Alamat : "+vicinity+"\n Rating : " +rating+"\n Latitude : "+lat+"\n Longitude : "+lng;
 
             LatLng latLng = new LatLng(lat, lng);
             MarkerOptions markerOptions = new MarkerOptions()

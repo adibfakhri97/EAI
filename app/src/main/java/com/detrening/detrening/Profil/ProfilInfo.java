@@ -1,10 +1,12 @@
 package com.detrening.detrening.Profil;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -25,12 +27,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfilInfo extends AppCompatActivity {
     TextView namaProfile, tinggiProfile, beratProfile, emailProfile, beratIdeal;
     CircleImageView fotoP;
+    Button infoM;
+    ImageView verif;
 
     FirebaseAuth mAuth;
     FirebaseUser user;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, dataAPI;
 
     public static final String Database_Path = "DeTrening";
+    public static final String DeTrening_API = "DataAPI";
     String uID;
 
     RadioButton LK, PR;
@@ -49,6 +54,7 @@ public class ProfilInfo extends AppCompatActivity {
         }
 
         databaseReference = FirebaseDatabase.getInstance().getReference(Database_Path);
+        dataAPI = FirebaseDatabase.getInstance().getReference(DeTrening_API);
 
         FirebaseUser user = mAuth.getCurrentUser();
 
@@ -61,6 +67,8 @@ public class ProfilInfo extends AppCompatActivity {
         emailProfile = (TextView) findViewById(R.id.emailInfo);
         beratProfile = (TextView) findViewById(R.id.beratInfo);
         beratIdeal = (TextView) findViewById(R.id.txtB);
+        infoM = (Button) findViewById(R.id.infoMember);
+        verif = (ImageView) findViewById(R.id.verif);
 
         emailProfile.setText(emailsaya);
 
@@ -117,6 +125,37 @@ public class ProfilInfo extends AppCompatActivity {
                 } else {
                     startActivity(new Intent(ProfilInfo.this, EditProfile.class));
                 }
+
+                dataAPI.addValueEventListener(new ValueEventListener() {
+                    @SuppressLint("ResourceAsColor")
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String nama = dataSnapshot.child(uID).child("nama").getValue(String.class);
+
+                        if (nama != null){
+                            infoM.setClickable(true);
+                            infoM.setText("Member");
+                            infoM.setTextColor(R.color.TRUE);
+
+                            verif.setVisibility(View.VISIBLE);
+
+                            infoM.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(ProfilInfo.this, infoMember.class);
+                                    startActivity(intent);
+                                }
+                            });
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
 
             }

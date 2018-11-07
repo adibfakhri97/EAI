@@ -66,10 +66,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
     double latitude, longitude;
     public static final int REQUEST_LOCATION_CODE = 99;
 
-    private PlaceAutoComplete placeAutoComplete;
-    AutoCompleteTextView autoCompleteTextView;
     EditText tf_location;
-    private PlaceInfo mPlace;
 
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40, -168), new LatLng(71, 136));
 
@@ -86,6 +83,8 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
         mapFragment.getMapAsync(Maps.this);
 
         tf_location = (EditText) findViewById(R.id.searchEdit);
+
+
        /* autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.searchEdit);
 
 

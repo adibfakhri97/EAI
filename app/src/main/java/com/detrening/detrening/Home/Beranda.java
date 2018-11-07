@@ -212,7 +212,7 @@ public class Beranda extends AppCompatActivity {
                 fungsiLogout();
                 break;
             case R.id.nav_maps:
-                Toast.makeText(Beranda.this, "Maps", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Beranda.this, "Member", Toast.LENGTH_SHORT).show();
                 Intent intent3 = new Intent(Beranda.this, Maps.class);
                 startActivity(intent3);
                 break;
