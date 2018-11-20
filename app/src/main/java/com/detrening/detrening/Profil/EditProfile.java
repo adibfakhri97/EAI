@@ -1,17 +1,22 @@
 package com.detrening.detrening.Profil;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,17 +37,19 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 public class EditProfile extends AppCompatActivity {
 
+
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
-
-
+    private DatePickerDialog.OnDateSetListener mDateListener;
+    private String dateOfBirth, yearBirth, monthBirth, dateBirth;
     String Storage_Path = "fotoprofile/";
     public static final String Database_Path = "DeTrening";
     EditText namaEdit, beratEdit, tinggiEdit;
-    TextView userEdit;
+    TextView userEdit, ttlEdit;
     ImageView fotoView;
     Uri FilePathUri;
     private StorageReference storageReference;
@@ -80,6 +87,7 @@ public class EditProfile extends AppCompatActivity {
         namaEdit = (EditText) findViewById(R.id.namaEdit);
         beratEdit = (EditText) findViewById(R.id.beratEdit);
         tinggiEdit = (EditText) findViewById(R.id.tinggiEdit);
+        ttlEdit = (TextView) findViewById(R.id.ttlEdit);
         userEdit = (TextView) findViewById(R.id.userEdit);
         userEdit.setText(email);
 
@@ -87,11 +95,41 @@ public class EditProfile extends AppCompatActivity {
 
         fotoView = (ImageView) findViewById(R.id.fotoEdit);
 
+        ttlEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(EditProfile.this,
+                        android.R.style.Theme_Holo_Light, mDateListener, year, month, day);
+                datePickerDialog.getWindow(
+
+                ).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                datePickerDialog.show();
+            }
+        });
+
+        mDateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                String date = dayOfMonth + "/"+month+"/"+year;
+                dateBirth = date;
+                Log.d("Day of Birth", date );
+                ttlEdit.setText(date);
+                String date1 = dayOfMonth + ""+month+""+year;
+
+            }
+        };
+
         progressDialog = new ProgressDialog(EditProfile.this);
 
 
 
     }
+
 
     public void pilihFoto(View view) {
         Intent intent = new Intent();

@@ -3,6 +3,7 @@ package com.detrening.detrening.Authentication;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -56,6 +57,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        MultiDex.install(this);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
@@ -222,7 +224,13 @@ public class Login extends AppCompatActivity {
                             finish();
                             Toast.makeText(Login.this, "Welcome to the dark side", Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
+
                             FirebaseUser user = mAuth.getCurrentUser();
+                            String uid = user.getUid();
+                            String name = user.getDisplayName();
+                            String email = user.getEmail();
+                            String photo = user.getPhotoUrl().toString();
+
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -248,7 +256,13 @@ public class Login extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
+
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            String uid = user.getUid();
+                            String name = user.getDisplayName();
+                            String email = user.getEmail();
+                            String photo = user.getPhotoUrl().toString();
 
                         } else {
                             // If sign in fails, display a message to the user.

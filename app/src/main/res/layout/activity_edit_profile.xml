@@ -108,6 +108,21 @@
                 android:inputType="number"
                 android:textStyle="italic|bold"
                 android:shadowColor="@android:color/holo_blue_dark" />
+
+            <TextView
+                android:id="@+id/ttlEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tinggiEdit"
+                android:layout_marginTop="17dp"
+                android:hint="Your Birth Date"
+                android:textColorHint="@color/cyan"
+                android:inputType="none"
+                android:textStyle="italic|bold"
+                android:clickable="true"
+                android:shadowColor="@android:color/holo_blue_dark" />
         </RelativeLayout>
 
 
