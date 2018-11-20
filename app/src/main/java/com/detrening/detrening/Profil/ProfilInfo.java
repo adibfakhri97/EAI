@@ -92,32 +92,36 @@ public class ProfilInfo extends AppCompatActivity {
                 String email = dataSnapshot.child(uID).child("user").getValue(String.class);
                 String dob = dataSnapshot.child(uID).child("lahir").getValue(String.class);
 
-                String[] items1 = dob.split("/");
-                String day = items1[0];
-                String month = items1[1];
-                String year = items1[2];
-                int d = Integer.parseInt(day);
-                int m = Integer.parseInt(month);
-                int y = Integer.parseInt(year);
-                getAge(d, y, m);
+                if(dob!=null){
+                    String[] items1 = dob.split("/");
+                    String day = items1[0];
+                    String month = items1[1];
+                    String year = items1[2];
+                    int d = Integer.parseInt(day);
+                    int m = Integer.parseInt(month);
+                    int y = Integer.parseInt(year);
+                    getAge(d, y, m);
 
-                int currentAge;
-                GregorianCalendar cal = new GregorianCalendar();
-                int currentYear = cal.get(Calendar.YEAR);
-                int currentMonth = cal.get(Calendar.MONTH);
-                int currentDay = cal.get(Calendar.DAY_OF_MONTH);
+                    int currentAge;
+                    GregorianCalendar cal = new GregorianCalendar();
+                    int currentYear = cal.get(Calendar.YEAR);
+                    int currentMonth = cal.get(Calendar.MONTH);
+                    int currentDay = cal.get(Calendar.DAY_OF_MONTH);
 
-                cal.set(y, m, d);
-                currentAge = currentYear-cal.get(Calendar.YEAR);
-                if ((currentMonth < cal.get(Calendar.MONTH))
-                        || ((m == cal.get(Calendar.MONTH)) && (currentDay < cal
-                        .get(Calendar.DAY_OF_MONTH)))) {
-                    --currentAge;
+                    cal.set(y, m, d);
+                    currentAge = currentYear-cal.get(Calendar.YEAR);
+                    if ((currentMonth < cal.get(Calendar.MONTH))
+                            || ((m == cal.get(Calendar.MONTH)) && (currentDay < cal
+                            .get(Calendar.DAY_OF_MONTH)))) {
+                        --currentAge;
+                    }
+                    if(currentAge < 0)
+                        throw new IllegalArgumentException("Age < 0");
+
+                    String umur = Integer.toString(currentAge);
+                    ageProfile.setText(umur);
                 }
-                if(currentAge < 0)
-                    throw new IllegalArgumentException("Age < 0");
 
-                String umur = Integer.toString(currentAge);
 
 
                 if (nama!=null) {
@@ -125,7 +129,7 @@ public class ProfilInfo extends AppCompatActivity {
                     namaProfile.setText(nama);
                     beratProfile.setText(berat);
                     tinggiProfile.setText(tinggi);
-                    ageProfile.setText(umur);
+
                 //    emailProfile.setText(email);
                     //       fotoView.setImageDrawable(gambar);
                     Glide.with(ProfilInfo.this).load(gambar).into(fotoP);
