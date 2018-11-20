@@ -97,7 +97,7 @@ public class Login extends AppCompatActivity {
                 Intent intent = new Intent(Login.this, Beranda.class);
                 finish();
                 startActivity(intent);
-                Toast.makeText(Login.this, "Welcome to the Dark Side", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Welcome back!", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
 
