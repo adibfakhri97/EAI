@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,14 +23,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfilInfo extends AppCompatActivity {
-    TextView namaProfile, tinggiProfile, beratProfile, emailProfile, beratIdeal;
+    TextView namaProfile, tinggiProfile, beratProfile, emailProfile, beratIdeal, ageProfile;
     CircleImageView fotoP;
     Button infoM;
     ImageView verif;
-
+//    public int umur;
     FirebaseAuth mAuth;
     FirebaseUser user;
     DatabaseReference databaseReference, dataAPI;
@@ -67,6 +71,7 @@ public class ProfilInfo extends AppCompatActivity {
         emailProfile = (TextView) findViewById(R.id.emailInfo);
         beratProfile = (TextView) findViewById(R.id.beratInfo);
         beratIdeal = (TextView) findViewById(R.id.txtB);
+        ageProfile = (TextView) findViewById(R.id.ageInfo);
         infoM = (Button) findViewById(R.id.infoMember);
         verif = (ImageView) findViewById(R.id.verif);
 
@@ -85,12 +90,42 @@ public class ProfilInfo extends AppCompatActivity {
                 String tinggi = dataSnapshot.child(uID).child("tinggi").getValue(String.class);
                 String gambar = dataSnapshot.child(uID).child("imageURL").getValue(String.class);
                 String email = dataSnapshot.child(uID).child("user").getValue(String.class);
+                String dob = dataSnapshot.child(uID).child("lahir").getValue(String.class);
+
+                String[] items1 = dob.split("/");
+                String day = items1[0];
+                String month = items1[1];
+                String year = items1[2];
+                int d = Integer.parseInt(day);
+                int m = Integer.parseInt(month);
+                int y = Integer.parseInt(year);
+                getAge(d, y, m);
+
+                int currentAge;
+                GregorianCalendar cal = new GregorianCalendar();
+                int currentYear = cal.get(Calendar.YEAR);
+                int currentMonth = cal.get(Calendar.MONTH);
+                int currentDay = cal.get(Calendar.DAY_OF_MONTH);
+
+                cal.set(y, m, d);
+                currentAge = currentYear-cal.get(Calendar.YEAR);
+                if ((currentMonth < cal.get(Calendar.MONTH))
+                        || ((m == cal.get(Calendar.MONTH)) && (currentDay < cal
+                        .get(Calendar.DAY_OF_MONTH)))) {
+                    --currentAge;
+                }
+                if(currentAge < 0)
+                    throw new IllegalArgumentException("Age < 0");
+
+                String umur = Integer.toString(currentAge);
+
 
                 if (nama!=null) {
 
                     namaProfile.setText(nama);
                     beratProfile.setText(berat);
                     tinggiProfile.setText(tinggi);
+                    ageProfile.setText(umur);
                 //    emailProfile.setText(email);
                     //       fotoView.setImageDrawable(gambar);
                     Glide.with(ProfilInfo.this).load(gambar).into(fotoP);
@@ -173,5 +208,28 @@ public class ProfilInfo extends AppCompatActivity {
                 startActivity(new Intent(ProfilInfo.this, EditProfile.class));
             }
         });
+    }
+
+    public int getAge(int day, int month, int year){
+        GregorianCalendar cal = new GregorianCalendar();
+        int y, m, d, a;
+        y = cal.get(Calendar.YEAR);
+        m = cal.get(Calendar.MONTH);
+        d = cal.get(Calendar.DAY_OF_MONTH);
+
+        cal.set(day, month, year);
+        a = y-cal.get(Calendar.YEAR);
+        if ((m < cal.get(Calendar.MONTH))
+                || ((m == cal.get(Calendar.MONTH)) && (d < cal
+                .get(Calendar.DAY_OF_MONTH)))) {
+            --a;
+        }
+        if(a < 0)
+            throw new IllegalArgumentException("Age < 0");
+
+//        a = umur;
+        String agetest = Integer.toString(a);
+        Log.d("Age: ", agetest);
+        return a;
     }
 }

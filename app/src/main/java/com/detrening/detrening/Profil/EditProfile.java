@@ -115,9 +115,10 @@ public class EditProfile extends AppCompatActivity {
         mDateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                String date = dayOfMonth + "/"+month+"/"+year;
+                int realMonth = month+1;
+                String date = dayOfMonth + "/"+realMonth+"/"+year;
                 dateBirth = date;
-                Log.d("Day of Birth", date );
+
                 ttlEdit.setText(date);
                 String date1 = dayOfMonth + ""+month+""+year;
 
@@ -149,9 +150,9 @@ public class EditProfile extends AppCompatActivity {
                     String nama = namaEdit.getText().toString().trim();
                     String tinggi = tinggiEdit.getText().toString().trim();
                     String berat = beratEdit.getText().toString().trim();
-
+                    String lahir = dateBirth;
                     @SuppressWarnings("VisibleForTests")
-                    AdapterProfile imageUploadInfo = new AdapterProfile(nama,tinggi,berat, Beranda.emailUser, taskSnapshot.getDownloadUrl().toString());
+                    AdapterProfile imageUploadInfo = new AdapterProfile(nama,tinggi,berat, Beranda.emailUser, taskSnapshot.getDownloadUrl().toString(), lahir);
 
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     databaseReference.child(user.getUid()).setValue(imageUploadInfo);
@@ -161,6 +162,7 @@ public class EditProfile extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Profil berhasil disimpan", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(EditProfile.this, ProfilInfo.class);
+                    Log.d("Day of Birth", dateOfBirth );
                     startActivity(intent);
                     finish();
 

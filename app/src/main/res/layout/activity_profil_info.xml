@@ -142,6 +142,63 @@
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="7dp">
+
+                <ImageView
+                    android:id="@+id/age"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_account_circle_black_24dp"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/age_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="17dp"
+                    android:layout_toEndOf="@+id/age"
+                    android:text="Age"
+                    android:textStyle="italic"/>
+
+                <RelativeLayout
+                    android:id="@+id/age_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="84dp"
+                    android:layout_toEndOf="@+id/age_label"
+                    android:padding="10dp"
+                    android:background="@color/cyan"
+                    android:backgroundTint="@color/cyan"
+
+                    >
+
+                    <TextView
+                        android:id="@+id/ageInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+
+                        android:text="DeTrening"
+                        android:textColor="@android:color/black" />
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

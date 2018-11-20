@@ -10,7 +10,7 @@ public class AdapterProfile {
     public String nama;
     public String tinggi;
     public String berat;
-
+    public String lahir;
     public String imageURL;
     public String user;
 
@@ -18,13 +18,14 @@ public class AdapterProfile {
 
     }
 
-    public AdapterProfile(String name, String tinggi, String berat, String user, String imageURL) {
+    public AdapterProfile(String name, String tinggi, String berat, String user, String imageURL, String lahir) {
 
         this.nama = name;
         this.tinggi = tinggi;
         this.berat = berat;
         this.imageURL= imageURL;
         this.user = user;
+        this.lahir = lahir;
     }
 
 }
